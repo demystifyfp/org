@@ -26,7 +26,7 @@
 (defn filter-by-language
   [lang repos]
   (filter (fn [repo]
-           (contains? (:languages repo) lang))
+            (contains? (:languages repo) lang))
           repos))
 
 (defn languages-by-count
@@ -37,7 +37,7 @@
 (defn sum-contributors
   [repos]
   (count
-    (into #{} (mapcat :contributors) repos)))
+   (into #{} (mapcat :contributors) repos)))
 
 (rum/defc link-list
   [links]
@@ -247,8 +247,8 @@
          [:li
           {:key lang}
           [(if (= lang filter-language)
-           :a.active
-           :a)
+             :a.active
+             :a)
            {:href "#"
             :on-click (select-lang lang)}
            lang
@@ -272,7 +272,7 @@
       (search state)
       (filter-and-sort state)
       [:div.project-list
-       (for [repo searched-repos]
+       (for [repo base-repos]
          (repo-card repo (:languages config) (:project-logos config)))]]]))
 
 (defn github-url
@@ -297,7 +297,7 @@
    [:div.wrapper
     [:div.navigation
      (link-list links)
-     (let [year 2016
+     (let [year 2019
            org (or organization-name organization)]
        [:p
         (str "Copyright " year " " org " - Built with ")

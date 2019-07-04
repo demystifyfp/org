@@ -14,3 +14,4 @@ pom.xml
 .sass-cache/
 resources/public/css
 hicv
+.DS_Store

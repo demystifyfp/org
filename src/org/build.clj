@@ -24,20 +24,20 @@
     [:meta
      {:name "viewport", :content "width=device-width, initial-scale=1"}]
     [:link
-     {:rel "icon",
+     {:rel "icon"
       :type "image/png"
       :href
-      "img/favicon.png"}]
+      "https://s.gravatar.com/avatar/4827c34feb1e04f53717bde63f25b19e?s=200"}]
     [:link
-     {:rel "stylesheet",
+     {:rel "stylesheet"
       :href
       "https://cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.min.css"}]
     [:link
      {:href
-      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
-      :rel "stylesheet",
+      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+      :rel "stylesheet"
       :integrity
-      "sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1",
+      "sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1"
       :crossorigin "anonymous"}]
     [:link
      {:href "css/style.css", :rel "stylesheet", :type "text/css"}]]
@@ -120,7 +120,7 @@
 
 (defn generate-index!
   [file repos config]
-   (spit file (render-static-page repos config)))
+  (spit file (render-static-page repos config)))
 
 (defn compile-css!
   [file style-config]

@@ -83,11 +83,11 @@
 (defn parse-repo-response
   [resp]
   (->> resp
-    :body
-    #?(:clj
-       (slurp))
-    (j/json->clj)
-    make-repo))
+       :body
+       #?(:clj
+          (slurp))
+       (j/json->clj)
+       make-repo))
 
 (defn parse-repos-response
   [resp]
@@ -111,7 +111,8 @@
                   (if (has-next? resp)
                     (get-org-repos-next! token result resp)
                     result))
-                (p/rejected (ex-info "Unsuccessful request" {:response resp})))))))
+                (p/rejected (ex-info "Unsuccessful request" {:response resp
+                                                             :url (:url req)})))))))
 
 (defn get-repo!
   [user repo token]
@@ -123,7 +124,8 @@
             (fn [resp]
               (if (status/success? resp)
                 (parse-repo-response resp)
-                (p/rejected (ex-info "Unsuccessful request" {:response resp})))))))
+                (p/rejected (ex-info "Unsuccessful request" {:response resp
+                                                             :url (:url req)})))))))
 
 (defn get-org-repos!
   [org token]
@@ -139,15 +141,16 @@
                   (if (has-next? resp)
                     (get-org-repos-next! token result resp)
                     result))
-                (p/rejected (ex-info "Unsuccessful request" {:response resp})))))))
+                (p/rejected (ex-info "Unsuccessful request" {:response resp
+                                                             :url (:url req)})))))))
 
 (defn parse-languages-response
   [resp]
   (as-> (:body resp) $
-        #?(:clj
-           (slurp $))
-        (j/json->clj $ {:keywordize? false :default {}})
-        (set (keys $))))
+    #?(:clj
+       (slurp $))
+    (j/json->clj $ {:keywordize? false :default {}})
+    (set (keys $))))
 
 (defn get-repo-languages!
   [repo token]
@@ -160,15 +163,16 @@
              (fn [resp]
                (if (status/success? resp)
                  (parse-languages-response resp)
-                 (p/rejected (ex-info "Unsuccessful request" {:response resp})))))))
+                 (p/rejected (ex-info "Unsuccessful request" {:response resp
+                                                              :url (:url req)})))))))
 
 (defn parse-contributors-response
   [resp]
   (as-> (:body resp) $
-        #?(:clj
-           (slurp $))
-        (j/json->clj $ {:keywordize? true :default []})
-        (map :id $)))
+    #?(:clj
+       (slurp $))
+    (j/json->clj $ {:keywordize? true :default []})
+    (map :id $)))
 
 (defn get-repo-contributors-next!
   [token contribs links]
@@ -182,7 +186,8 @@
                     (if (has-next? resp)
                       (get-repo-contributors-next! token result (parse-links resp))
                       (p/resolved result)))
-                  (p/rejected (ex-info "Unsuccessful request" {:response resp}))))
+                  (p/rejected (ex-info "Unsuccessful request" {:response resp
+                                                               :url (:url req)}))))
               prom)))
 
 (defn get-repo-contributors!
@@ -193,13 +198,14 @@
              :headers (headers token)}
         prom (http/send! client req)]
     (p/mapcat (fn [resp]
-               (if (status/success? resp)
-                 (let [result (parse-contributors-response resp)]
-                   (if (has-next? resp)
-                     (get-repo-contributors-next! token result (parse-links resp))
-                     (p/resolved result)))
-                 (p/rejected (ex-info "Unsuccessful request" {:response resp}))))
-             prom)))
+                (if (status/success? resp)
+                  (let [result (parse-contributors-response resp)]
+                    (if (has-next? resp)
+                      (get-repo-contributors-next! token result (parse-links resp))
+                      (p/resolved result)))
+                  (p/rejected (ex-info "Unsuccessful request" {:response resp
+                                                               :url (:url req)}))))
+              prom)))
 
 ;; Data sources
 
